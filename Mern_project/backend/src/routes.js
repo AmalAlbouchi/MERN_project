@@ -1,23 +1,20 @@
-import React from 'react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Ajouter from './pages/Ajouter'
-import Home from './pages/Home'
-import Register from './pages/Register'
-import Login from './pages/Login'
-import Calendrier from './pages/Calendrier/'
-import TopNav from './components/TopNav'
+const express = require('express')
 
-export default function Routes() {
-    return (
-        <BrowserRouter>
-        
-            <Switch>
-                <Route path='/' exact component={Home} />
-                <Route path='/calendrier' exact component={Calendrier} />
-                <Route path='/Ajouter' component={Ajouter} />
-                <Route path='/Register' component={Register} />
-                <Route path='/Login' component={Login} />
-            </Switch>
-        </BrowserRouter>
-    );
-}
+const ConsultationController = require('./controllers/ConsultationController')
+const UserController = require('./controllers/UserController')
+const verifyToken = require('./config/verifyToken')
+
+const routes = express.Router();
+//consultation
+routes.post('/Consultation' ,verifyToken, ConsultationController.createConsultation)
+routes.get('/Consultation',verifyToken, ConsultationController.getAllConsultations)
+routes.delete('/Consultation/:consultationId',verifyToken, ConsultationController.delete)
+routes.patch('/Consultation/:id',verifyToken, ConsultationController.updateConsultation);
+routes.get('/user/consultations',verifyToken, ConsultationController.getConsultationsByUserId)
+
+
+//user
+routes.post('/user/register', UserController.creerUser)
+routes.post('/login', UserController.login)
+
+module.exports = routes;
