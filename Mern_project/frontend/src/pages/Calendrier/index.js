@@ -1,55 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../services/api';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Button, ButtonGroup } from 'reactstrap';
 import './dashboard.css'
 //Dashboard will show all the events 
 export default function Dashboard({history}) {
     const [events, setEvents] = useState([]);
-    const user = localStorage.getItem('user');
-    const user_id = localStorage.getItem('user_id');
-   
+    const [error, setError] = useState(false);
     const [cSelected, setCSelected] = useState([]);
     const [rSelected, setRSelected] = useState(null);
-
+    console.log("aaaaaaaaaaaaaaaaaa");
     useEffect(() => {
         getEvents()
     }, [])
-
     const filterHandler = (query) => {
         setRSelected(query)
         getEvents(query)
     }
-    const logoutHandler = () => {
-        localStorage.removeItem('user')
-        localStorage.removeItem('user_id')
-        history.push('/login');
-    }
-
-
     const getEvents = async (filter) => {
-        try {
         const url = filter ? `/home/${filter}` : '/Consultation'
-        const response = await api.get(url, { headers: { user: user } })
-        
+        const response = await api.get(url)
+
         setEvents(response.data)
+    };
+
+    const deleteEventHandler = async(eventId) => {
         
-    } catch (error) {
-        history.push('/login');
+        try {
+            await api.delete(`/Consultation/${eventId}`);
+            //setSuccess(true)
+            setTimeout(() => {
+                //setSuccess(false)
+                filterHandler(null)
+            }, 0)
+            history.push('/')
+        } catch (error) {
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+            }, 2000)
+        }
     }
 
-};
+
+  
+
 
     return (
         <>
             <div>
                 <Button color="secondary">La liste des consultation</Button>
             </div>
-
-            <ButtonGroup>
-                    <br/>
-                    <Button color="danger" onClick={logoutHandler}>Logout</Button>
-                </ButtonGroup>
             <ul className="events-list">
                 {events.map(event => (
                     <li key={event._id}>
@@ -57,7 +59,19 @@ export default function Dashboard({history}) {
                         <span>Les syndromes du patient: {event.syndrome}</span>
                         <span>La date de consultation: {parseFloat(event.date).toFixed(2)}</span>
                         <span>La description de la consultation: {event.description}</span>
-                        <Button color="primary">more details</Button>
+                        <div><Button color="danger"  size="sm"onClick={() => deleteEventHandler(event._id)}>Delete</Button></div>
+                        
+                        <Link to={{
+                            pathname: '/EditConsultation/',
+                            state: { Consultation_id: event._id }
+                            }}> 
+                            <div>
+                                <Button color="info"  size="sm" edit>
+                                    Edit
+                                </Button>
+                            </div>
+                        </Link>
+    
                     </li>
                 ))}
             </ul>

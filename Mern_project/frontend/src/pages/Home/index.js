@@ -1,18 +1,7 @@
-
-import React, { useEffect, useState } from 'react';
-
-
-export default function Home({history}){
+import React from 'react';
 
 
-
-    useEffect(() => {
-        if (!user) history.push('/login');
-    }, [])
-
-    const user = localStorage.getItem('user');
-    const user_id = localStorage.getItem('user_id');
-
+export default function Home(){
     return(
         <div>
             Hello Home
