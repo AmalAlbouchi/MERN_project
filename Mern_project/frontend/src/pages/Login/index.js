@@ -10,26 +10,17 @@ export default function Login({ history }) {
 
     const handleSubmit = async evt => {
         evt.preventDefault();
-        const response = await api.post('/login', { email, password })
-        const user_id = response.data.user_id || false;
-        const user = response.data.user || false;
-        
-        try {
-            if (user && user_id) {
-                localStorage.setItem('user', user)
-                localStorage.setItem('user_id', user_id)
-                history.push('/')
-            } else {
-                const { message } = response.data
-                setError(true)
-                setErrorMessage(message)
-                setTimeout(() => {
-                    setError(false)
-                    setErrorMessage("")
-                }, 2000)
-            }
-        } catch (error) {
+        console.log('result of the submit', email, password)
 
+        const response = await api.post('/login', { email, password })
+        const userId = response.data._id || false;
+
+        if (userId) {
+            localStorage.setItem('user', userId)
+            history.push('/dashboard')
+        } else {
+            const { message } = response.data
+            console.log(message)
         }
     }
 

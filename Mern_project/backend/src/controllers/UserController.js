@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/User')
-const jwt = require('jsonwebtoken')
+
 
 module.exports = {
 	async creerUser(req, res) {
@@ -18,12 +18,15 @@ module.exports = {
 					password: hashPassword,
 				})
 				
-				return jwt.sign({ user: userResponse }, 'secret', (err, token) => {
-					return res.json({
-						user: token,
-						user_id: userResponse._id
+				return res.json({
+					_id: user._id,
+					email: user.email,
+					password: user.password,
+					role: user.role,
+                    nom: user.nom,
+                    prenom: user.prenom
 					})
-				})
+				
 			} else {
 				return res.status(400).json({
 					message:
@@ -57,12 +60,8 @@ module.exports = {
                     role: user.role
 				}
 
-				return jwt.sign({ user: userResponse }, 'secret', (err, token) => {
-					return res.json({
-						user: token,
-						user_id: userResponse._id
-					})
-				})
+                return res.json(userResponse)
+			
             } else {
                 return res.status(200).json({ message: "Email or Password does not match!" })
             }

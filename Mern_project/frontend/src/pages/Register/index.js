@@ -17,12 +17,12 @@ export default function Register({ history }) {
         evt.preventDefault();
 
         if (email !== "" && password !== "" && nom !== "" && prenom !== ""  && role !== "") {
-            const response = await api.post('/user/register', { email, password, nom, prenom })
-            const user = response.data.user || false;
+            const response = await api.post('/user/register', { email, password, nom, prenom, role })
+           
             const user_id = response.data.user_id || false;
 
-            if (user && user_id) {
-                localStorage.setItem('user', user)
+            if ( user_id) {
+               
                 localStorage.setItem('user_id', user_id)
                 history.push('/')
             } else {

@@ -14,15 +14,9 @@ body,
 }
 
 body {
-    background-color: coral;
-  }
-
-body {
-    background-color: coral;
-    background:url("./assets/background1.jpg") ;
-    background-size:auto;
+    background: rgba(0, 0, 0, 0.5) url("./assets/background.jpg") no-repeat;
+    background-size:cover;
     -webkit-font-smoothing: antialiased !important;
-    
 }
 
 body,

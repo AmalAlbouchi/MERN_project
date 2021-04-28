@@ -1,5 +1,5 @@
 import { Container, Button, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
-import React, { useState, useEffect , useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import api from '../../services/api';
 import "./events.css";
 export default function EventsPage({history}) {
@@ -9,12 +9,7 @@ export default function EventsPage({history}) {
     const [errorMessage, setErrorMessage] = useState(false)
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
-    const user = localStorage.getItem('user');
     console.log(syndromes,description,date)
-
-    useEffect(() => {
-        if (!user) history.push('/login');
-    }, [])
 
 
     const submitHandler = async (Consultation) => {
@@ -25,9 +20,6 @@ export default function EventsPage({history}) {
         eventData.append('date',date)
         console.log('dataaaa_lenaa==>',eventData)
         console.log('dataaaa_lenaa',syndromes)
-
-        const user_id = localStorage.getItem('user');
-
         try {
             if (syndromes !== "" &&
                 description !== "" &&
@@ -36,8 +28,8 @@ export default function EventsPage({history}) {
             {
                 console.log("Consultation has been sent")
                 console.log("data :", eventData)
-                await api.post("/Consultation",{'syndrome':syndromes,'description':description,'date':date} , { headers: { user_id } })
-                // await api.post("/Consultation",eventData)
+                await api.post("/Consultation",{'syndrome':syndromes,'description':description,'date':date})
+                history.push('/calendrier')
                 console.log(eventData)
                 console.log("consultation has been saved")
             } else {
@@ -58,7 +50,7 @@ export default function EventsPage({history}) {
     
         <Container>
             
-            <h2>Creer votre consultation</h2>
+            <h2>Create your Event</h2>
             <Form onSubmit={submitHandler}>   
                  {/* <FormGroup>
                     <Label>Sport: </Label>
